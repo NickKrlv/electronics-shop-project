@@ -31,3 +31,7 @@ def test_string_to_number():
     assert Item.string_to_number("100.0") == 100
 
 
+def test_sum_items():
+    item1 = Item("Смартфон", 10000, 20)
+    item2 = Item("Ноутбук", 20000, 5)
+    assert item1 + item2 == 25

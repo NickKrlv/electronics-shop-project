@@ -27,6 +27,11 @@ class Item:
     def __str__(self):
         return f"{self.name}"
 
+    def __add__(self, other):
+        if isinstance(other, Item):
+            return self.quantity + other.quantity
+        return NotImplemented
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
@@ -59,7 +64,7 @@ class Item:
         """
         current_dir = os.path.dirname(os.path.abspath(__file__))
         csv_path = os.path.join(current_dir, csv_filename)
-        with open(csv_path, 'r') as file:
+        with open(csv_path, 'r', encoding='windows-1251') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 Item.all.append(Item(row['name'], row['price'], row['quantity']))
