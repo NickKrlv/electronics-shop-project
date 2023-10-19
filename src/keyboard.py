@@ -2,16 +2,19 @@ from src.item import Item
 
 
 class MixinLog:
-    language = "EN"
 
     def __init__(self) -> None:
-        self.language = "EN"
+        self.__language = "EN"
 
     def change_lang(self) -> None:
-        if self.language == 'EN':
-            self.language = 'RU'
-        elif self.language == 'RU':
-            self.language = 'EN'
+        if self.__language == 'EN':
+            self.__language = 'RU'
+        elif self.__language == 'RU':
+            self.__language = 'EN'
+
+    @property
+    def language(self):
+        return self.__language
 
 
 class Keyboard(Item, MixinLog):
