@@ -1,13 +1,18 @@
 import csv
 import os
 from csv import DictReader
-from src.InstantiateCSVError import InstantiateCSVError
+
+
+class InstantiateCSVError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 
 class Item:
     """
     Класс для представления товара в магазине.
     """
+    InstantiateCSVError = None
     pay_rate = 1.0
     all = []
 
@@ -62,19 +67,25 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls, csv_filename='items.csv'):
+        """
+        Инициализирует экземпляры класса `Item` данными из файла items.csv.
+        """
         current_dir = os.path.dirname(os.path.abspath(__file__))
         csv_path = os.path.join(current_dir, csv_filename)
-
-        if not os.path.exists(csv_path):
-            raise FileNotFoundError(f'Отсутствует файл item.csv')
-
         try:
             with open(csv_path, 'r', encoding='windows-1251') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    Item.all.append(Item(row['name'], row['price'], row['quantity']))
-        except InstantiateCSVError(csv_filename=csv_filename):
-            raise InstantiateCSVError(f'Файл {csv_filename} поврежден')
+                    if 'name' in row and 'price' in row and 'quantity' in row:
+                        name = row['name']
+                        price = cls.string_to_number(row['price'])
+                        quantity = cls.string_to_number(row['quantity'])
+                        cls.all.append(cls(name, price, quantity))
+
+                    else:
+                        raise InstantiateCSVError("Файл item.csv поврежден")
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл item.csv")
 
     @staticmethod
     def string_to_number(value: str) -> int:
