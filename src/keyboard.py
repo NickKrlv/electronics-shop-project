@@ -4,17 +4,21 @@ from src.item import Item
 class MixinLog:
 
     def __init__(self) -> None:
-        self.__language = "EN"
+        self._language = "EN"  # Используйте _language для хранения значения
 
     def change_lang(self) -> None:
-        if self.__language == 'EN':
-            self.__language = 'RU'
-        elif self.__language == 'RU':
-            self.__language = 'EN'
+        if self._language == 'EN':
+            self._language = 'RU'
+        elif self._language == 'RU':
+            self._language = 'EN'
 
     @property
     def language(self):
-        return self.__language
+        return self._language
+
+    @language.setter
+    def language(self, value):
+        self._language = value
 
 
 class Keyboard(Item, MixinLog):
